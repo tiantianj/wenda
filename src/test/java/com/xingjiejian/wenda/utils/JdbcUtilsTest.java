@@ -10,6 +10,9 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
+/**
+ * 测试类
+ */
 public class JdbcUtilsTest {
     private static DataSource dataSource;
     static {
@@ -19,6 +22,7 @@ public class JdbcUtilsTest {
     public static QueryRunner getQueryRuner(){
         return new QueryRunner(dataSource);
     }
+
 
     @Test
     public void testDataSource() throws SQLException {
