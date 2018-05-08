@@ -100,4 +100,18 @@ public class User {
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", loginName='" + loginName + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", password='" + password + '\'' +
+                ", icon='" + icon + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", introduction='" + introduction + '\'' +
+                '}';
+    }
 }
