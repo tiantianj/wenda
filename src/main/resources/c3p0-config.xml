@@ -2,10 +2,14 @@
 <c3p0-config>
     <default-config>
         <property name="driverClass">com.mysql.cj.jdbc.Driver</property>
-        <property name="jdbcUrl">jdbc:mysql://localhost:3306/wenda?useSSL=false</property>
+        <property
+                name="jdbcUrl">jdbc:mysql://localhost:3306/wenda?useSSL=false&amp;serverTimezone=Hongkong&amp;useUnicode=true&amp;characterEncoding=utf8</property>
         <property name="user">root</property>
         <property name="password">root</property>
+
+        <property name="acquireIncrement">3</property>
         <property name="initialPoolSize">5</property>
         <property name="maxPoolSize">10</property>
+        <property name="minPoolSize">2</property>
     </default-config>
 </c3p0-config>

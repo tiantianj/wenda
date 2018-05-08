@@ -61,7 +61,7 @@ CREATE TABLE `like` (
   `userid` int(11) DEFAULT NULL COMMENT '点赞用户id',
   `islike` tinyint(1) DEFAULT NULL COMMENT '标志位，0点赞，1踩',
   `answerid` int(11) DEFAULT NULL COMMENT '回答/评论的id',
-  `isanswer` tinyint(1) DEFAULT NULL COMMENT '标志位 0是回答点赞  1是评论点赞',
+  `commentid` int(11) DEFAULT NULL COMMENT '评论id',
   `time` datetime DEFAULT NULL COMMENT '设置时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='点赞表';
