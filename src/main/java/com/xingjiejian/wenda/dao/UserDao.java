@@ -2,9 +2,11 @@ package com.xingjiejian.wenda.dao;
 
 import com.xingjiejian.wenda.entity.User;
 
+import java.util.List;
+
 /**
  * 用户数据库操作
- * @author
+ * @author Xing.Jiejian
  */
 public interface UserDao {
     /**
@@ -39,5 +41,11 @@ public interface UserDao {
      * @return
      */
     User getUser(String loginName);
+
+    /**
+     * 查询所有的用户
+     * @return
+     */
+    List<User> findUsers();
 
 }
