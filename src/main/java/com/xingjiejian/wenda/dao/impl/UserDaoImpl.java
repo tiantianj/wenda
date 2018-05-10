@@ -1,5 +1,6 @@
 package com.xingjiejian.wenda.dao.impl;
 
+import com.xingjiejian.wenda.dao.BaseDao;
 import com.xingjiejian.wenda.dao.UserDao;
 import com.xingjiejian.wenda.entity.User;
 import com.xingjiejian.wenda.utils.JdbcUtils;
@@ -22,7 +23,7 @@ import java.util.List;
  *
  * @author
  */
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl extends BaseDao<User> implements UserDao {
     private final static Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 
     @Override
@@ -30,16 +31,7 @@ public class UserDaoImpl implements UserDao {
         String sql = "INSERT INTO user(loginName,nickName,password,icon,email,phone,introduction) VALUES(?,?,?,?,?,?,?)";
         Object[] params = {u.getLoginName(),u.getNickName(),u.getPassword(),u.getIcon(),u.getEmail(),u.getPhone(),u
                 .getIntroduction()};
-        try {
-            QueryRunner qr = new QueryRunner();
-            Connection conn = JdbcUtils.getConnection();
-            int count = qr.update(conn,sql,params);
-            BigInteger userId = qr.query(conn,"select last_insert_id()", new ScalarHandler<BigInteger>(1));
-            logger.debug("新增" + count + "条User数据=>Id："+userId);
-        } catch (SQLException e) {
-            logger.error("插入"+u+"失败");
-            logger.error(LogUtils.getStackTrace(e));
-        }
+        super.save(sql,params);
     }
 
     @Override
@@ -48,39 +40,19 @@ public class UserDaoImpl implements UserDao {
                 "id=?";
         Object[] params = {u.getLoginName(),u.getNickName(),u.getPassword(),u.getIcon(),u.getEmail(),u.getPhone(),u
                 .getIntroduction(),u.getId()};
-        try{
-            int count = new QueryRunner().update(JdbcUtils.getConnection(),sql,params);
-            logger.debug("更新"+count+"条数据=>"+u);
-        }catch (SQLException e){
-            logger.error("修改"+u+"失败");
-            logger.error(LogUtils.getStackTrace(e));
-        }
+        super.update(sql,params);
     }
 
     @Override
     public void deleteById(int id) {
         String sql = "DELETE FROM user WHERE id=?";
-        try {
-            int count = new QueryRunner().update(JdbcUtils.getConnection(),sql,id);
-            logger.debug("删除"+count+"条user数据，id=>"+id);
-        } catch (SQLException e) {
-            logger.error("删除id为"+id+"的user失败");
-            logger.error(LogUtils.getStackTrace(e));
-        }
+        super.deleteById(sql,id);
     }
 
     @Override
     public User getUser(int id) {
         String sql = "SELECT id,loginName,nickName,password,icon,email,phone,introduction FROM user WHERE id=?";
-        User user = null;
-        try {
-            user = new QueryRunner().query(JdbcUtils.getConnection(),sql, new BeanHandler<User>(User.class),id);
-            logger.debug("根据id查询用户成功："+user);
-        } catch (SQLException e) {
-            logger.error("查询id为"+id+"的user失败");
-            logger.error(LogUtils.getStackTrace(e));
-        }
-        return user;
+        return super.getById(sql,id);
     }
 
     @Override
