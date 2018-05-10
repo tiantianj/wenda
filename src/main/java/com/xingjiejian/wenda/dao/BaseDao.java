@@ -1,17 +1,18 @@
 package com.xingjiejian.wenda.dao;
 
+import com.xingjiejian.wenda.exception.DaoException;
 import com.xingjiejian.wenda.utils.JdbcUtils;
 import com.xingjiejian.wenda.utils.LogUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.ParameterizedType;
 import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * TODO
@@ -19,8 +20,6 @@ import java.sql.SQLException;
  * @author Xing.Jiejian
  */
 public abstract class BaseDao<T> {
-    //日志类
-    private final static Logger logger = LoggerFactory.getLogger(BaseDao.class);
 
     //当前类的泛型类型
     private Class clazz;
@@ -36,16 +35,14 @@ public abstract class BaseDao<T> {
      * @param sql
      * @param params
      */
-    public void save(String sql,Object...params){
+    public BigInteger save(String sql,Object...params) throws DaoException {
         try {
             QueryRunner qr = new QueryRunner();
             Connection conn = JdbcUtils.getConnection();
             int count = qr.update(conn,sql,params);
-            BigInteger id = qr.query(conn,"select last_insert_id()", new ScalarHandler<BigInteger>(1));
-            logger.debug("新增" + count + "条数据=>Id："+id);
+            return qr.query(conn,"select last_insert_id()", new ScalarHandler<BigInteger>(1));
         } catch (SQLException e) {
-            logger.error("新增失败");
-            logger.error(LogUtils.getStackTrace(e));
+            throw new DaoException("插入数据失败",e);
         }
     }
 
@@ -54,13 +51,11 @@ public abstract class BaseDao<T> {
      * @param sql
      * @param params
      */
-    public void update(String sql,Object...params){
+    public void update(String sql,Object...params) throws DaoException {
         try{
             int count = new QueryRunner().update(JdbcUtils.getConnection(),sql,params);
-            logger.debug("更新"+count+"条数据");
         }catch (SQLException e){
-            logger.error("更新失败");
-            logger.error(LogUtils.getStackTrace(e));
+            throw new DaoException("修改数据失败",e);
         }
     }
 
@@ -69,13 +64,11 @@ public abstract class BaseDao<T> {
      * @param sql
      * @param id
      */
-    public void deleteById(String sql,int id) {
+    public void deleteById(String sql,int id) throws DaoException {
         try {
             int count = new QueryRunner().update(JdbcUtils.getConnection(),sql,id);
-            logger.debug("删除"+count+"条数据，id=>"+id);
         } catch (SQLException e) {
-            logger.error("删除失败");
-            logger.error(LogUtils.getStackTrace(e));
+            throw new DaoException("根据主键删除数据失败",e);
         }
     }
 
@@ -85,15 +78,58 @@ public abstract class BaseDao<T> {
      * @param id
      * @return
      */
-    public T getById(String sql,int id){
+    public T getById(String sql,int id) throws DaoException {
         T t = null;
         try {
             t = new QueryRunner().query(JdbcUtils.getConnection(),sql, new BeanHandler<T>(clazz),id);
-            logger.debug("查询对象成功："+t);
         } catch (SQLException e) {
-            logger.error("查询失败");
-            logger.error(LogUtils.getStackTrace(e));
+            throw new DaoException("根据Id查询对象失败",e);
         }
         return t;
     }
+
+    /**
+     * 带条件查询集合
+     * @param sql
+     * @param params
+     * @return
+     */
+    public List<T> find(String sql,Object...params) throws DaoException {
+        List<T> ts = null;
+        try {
+            ts = new QueryRunner().query(JdbcUtils.getConnection(),sql, new BeanListHandler<T>(clazz),params);
+        } catch (SQLException e) {
+            throw new DaoException("带条件查询集合失败",e);
+        }
+        return ts;
+    }
+
+    /**
+     * 获取唯一结果集查询
+     * @param sql
+     * @param params
+     * @return
+     * @throws DaoException
+     */
+    public Object uniqueResult(String sql,Object...params) throws DaoException{
+        Object result = null;
+        try {
+            result = new QueryRunner().query(JdbcUtils.getConnection(),sql,new ScalarHandler(),params);
+        }catch (SQLException e){
+            throw new DaoException(e);
+        }
+        return result;
+    }
+
+    /**
+     * 获取分页偏移量
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    public int getOffset(int pageNo,int pageSize){
+        return (pageNo-1)*pageSize;
+    }
+
+
 }

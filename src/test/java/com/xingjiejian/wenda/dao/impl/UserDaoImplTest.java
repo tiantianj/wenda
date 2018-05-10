@@ -2,6 +2,7 @@ package com.xingjiejian.wenda.dao.impl;
 
 import com.xingjiejian.wenda.dao.UserDao;
 import com.xingjiejian.wenda.entity.User;
+import com.xingjiejian.wenda.exception.DaoException;
 import com.xingjiejian.wenda.utils.JdbcUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
@@ -25,7 +26,7 @@ public class UserDaoImplTest {
 
 
     @Test
-    public void save() {
+    public void save() throws DaoException {
         User u = new User();
         u.setLoginName("admin");
         u.setPassword("123456");
@@ -35,13 +36,13 @@ public class UserDaoImplTest {
     }
 
     @Test
-    public void getById() {
+    public void getById() throws DaoException {
         User user = dao.getUser(1);
         assertEquals("admin",user.getLoginName());
     }
 
     @Test
-    public void testFindUsers(){
+    public void testFindUsers() throws DaoException {
         List<User> users = dao.findUsers();
         for (User u:
              users) {

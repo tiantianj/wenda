@@ -91,4 +91,17 @@ public class Question {
     public void setTime(Date time) {
         this.time = time;
     }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", userId=" + userId +
+                ", picture='" + picture + '\'' +
+                ", categoryId=" + categoryId +
+                ", time=" + time +
+                '}';
+    }
 }
