@@ -22,35 +22,33 @@ public abstract class BaseDao {
 
     /**
      * 通用的新增操作
-     * @param o
      * @param sql
      * @param params
      */
-    public void save(Object o,String sql,Object...params){
+    public void save(String sql,Object...params){
         try {
             QueryRunner qr = new QueryRunner();
             Connection conn = JdbcUtils.getConnection();
             int count = qr.update(conn,sql,params);
-            BigInteger answerId = qr.query(conn,"select last_insert_id()", new ScalarHandler<BigInteger>(1));
-            logger.debug("新增" + count + "条"+o.getClass().getSimpleName()+"数据=>Id："+answerId);
+            BigInteger id = qr.query(conn,"select last_insert_id()", new ScalarHandler<BigInteger>(1));
+            logger.debug("新增" + count + "条数据=>Id："+id);
         } catch (SQLException e) {
-            logger.error("插入"+o+"失败");
+            logger.error("新增失败");
             logger.error(LogUtils.getStackTrace(e));
         }
     }
 
     /**
      * 通用的修改方法
-     * @param o
      * @param sql
      * @param params
      */
-    public void update(Object o,String sql,Object...params){
+    public void update(String sql,Object...params){
         try{
             int count = new QueryRunner().update(JdbcUtils.getConnection(),sql,params);
-            logger.debug("更新"+count+"条数据=>"+o);
+            logger.debug("更新"+count+"条数据");
         }catch (SQLException e){
-            logger.error("修改"+o+"失败");
+            logger.error("更新失败");
             logger.error(LogUtils.getStackTrace(e));
         }
     }
@@ -65,9 +63,9 @@ public abstract class BaseDao {
 
         try {
             int count = new QueryRunner().update(JdbcUtils.getConnection(),sql,id);
-            logger.debug("删除"+count+"条user数据，id=>"+id);
+            logger.debug("删除"+count+"条数据，id=>"+id);
         } catch (SQLException e) {
-            logger.error("删除id为"+id+"的user失败");
+            logger.error("删除失败");
             logger.error(LogUtils.getStackTrace(e));
         }
     }
