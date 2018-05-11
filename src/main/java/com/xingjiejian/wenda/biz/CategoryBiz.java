@@ -10,4 +10,12 @@ import java.util.List;
  */
 public interface CategoryBiz {
     // TODO
+
+    /**
+     * 获取分类分页数据
+     * @param pageNo
+     * @param pageSize
+     * @return
+     */
+    List<Category> findPages(int pageNo,int pageSize);
 }

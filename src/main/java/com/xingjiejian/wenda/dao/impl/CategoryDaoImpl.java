@@ -34,19 +34,22 @@ public class CategoryDaoImpl extends BaseDao<Category> implements CategoryDao {
 
     @Override
     public Category getById(int id) throws DaoException {
-        String sql = "SELECT id,name,pid WHERE id=?";
+        String sql = "SELECT id,name,pid FROM category WHERE id=?";
         return super.getById(sql,id);
     }
 
     @Override
     public List<Category> findPages(int pageNo, int pageSize) throws DaoException {
-        String sql = "SELECT id,name,pid LIMIT ?,?";
+        String sql = "SELECT c.id, c.`name`, c.pid FROM category AS c LEFT JOIN question AS q ON c.id = q.categoryId " +
+                "LEFT JOIN answer AS a ON q.id = a.questionId GROUP BY c.id ORDER BY COUNT(1) DESC LIMIT ?,?";
         return super.find(sql,super.getOffset(pageNo,pageSize),pageSize);
     }
 
+
+
     @Override
     public List<Category> findPagesByPid(int pid, int pageNo, int pageSize) throws DaoException {
-        String sql = "SELECT id,name,pid WHERE pid=? LIMIT ?,?";
+        String sql = "SELECT id,name,pid FROM category WHERE pid=? LIMIT ?,?";
         return super.find(sql,pid,super.getOffset(pageNo,pageSize),pageSize);
     }
 

@@ -49,6 +49,14 @@
             <version>1.2.5</version>
         </dependency>
 
+        <!--JSON工具类-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.47</version>
+        </dependency>
+
+
         <!--持久化操作相关-->
         <dependency>
             <groupId>mysql</groupId>

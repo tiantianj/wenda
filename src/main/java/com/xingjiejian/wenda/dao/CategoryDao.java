@@ -40,7 +40,7 @@ public interface CategoryDao {
     Category getById(int id) throws DaoException;
 
     /**
-     * 分页查询分类
+     * 分页查询分类(按照问题、回答数量降序排序)
      * @param pageNo
      * @param pageSize
      * @return
@@ -64,6 +64,7 @@ public interface CategoryDao {
      * @throws DaoException
      */
     long getCount() throws DaoException;
+
 
 
 }
